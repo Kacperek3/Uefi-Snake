@@ -1,0 +1,5 @@
+BOOTX64.EFI
+efi.img
+my_ovmf_vars.fd
+OVMF_VARS_4M.fd
+shellx64.efi

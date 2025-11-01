@@ -2,7 +2,7 @@
 .PHONY: all clean image run
 
 # Pliki wejściowe i wyjściowe
-SOURCE = main.c functions.c functions.h
+SOURCE = src/main.c src/platform.c src/renderer.c src/renderer.h src/platform.h
 TARGET = BOOTX64.EFI
 
 # Cross-kompilator MinGW (bez zmian)
@@ -13,6 +13,7 @@ CC = x86_64-w64-mingw32-gcc \
 # Flagi kompilatora (bez zmian)
 CFLAGS = \
     -std=c17 \
+	-Isrc \
     -Wall \
     -Wextra \
     -Wpedantic \
@@ -81,7 +82,7 @@ $(IMAGE_FILE): $(TARGET)
 	@echo "--- Obraz dysku gotowy ---"
 
 # Reguła kompilacji programu .EFI
-$(TARGET): $(SOURCE) efi.h
+$(TARGET): $(SOURCE) src/efi.h
 	@echo "--- Kompilowanie $(SOURCE) do $(TARGET) ---"
 	$(CC) $(CFLAGS) -o $@ $(SOURCE)
 
