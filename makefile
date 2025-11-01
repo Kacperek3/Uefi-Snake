@@ -2,7 +2,7 @@
 .PHONY: all clean image run
 
 # Pliki wejściowe i wyjściowe
-SOURCE = main.c
+SOURCE = main.c functions.c functions.h
 TARGET = BOOTX64.EFI
 
 # Cross-kompilator MinGW (bez zmian)
@@ -83,7 +83,7 @@ $(IMAGE_FILE): $(TARGET)
 # Reguła kompilacji programu .EFI
 $(TARGET): $(SOURCE) efi.h
 	@echo "--- Kompilowanie $(SOURCE) do $(TARGET) ---"
-	$(CC) $(CFLAGS) -o $@ $<
+	$(CC) $(CFLAGS) -o $@ $(SOURCE)
 
 clean:
 	@echo "--- Sprzątanie ---"

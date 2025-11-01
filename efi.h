@@ -1,3 +1,7 @@
+#ifndef EFI_H
+#define EFI_H
+
+
 /*
  * NOTE: void* fields in structs = not implemented!!
  */
@@ -15,12 +19,14 @@ typedef uint_least16_t char16_t;
 #endif
 
 // Common UEFI Data Types: UEFI Spec 2.10 section 2.3.1
+typedef uint8_t     UINT8;
 typedef uint16_t    UINT16;
 typedef uint32_t    UINT32;
 typedef uint64_t    UINT64;
 typedef uint64_t    UINTN;
 typedef char16_t    CHAR16;	// UTF-16, but should use UCS-2 code points 0x0000-0xFFFF
 typedef void        VOID;
+typedef uint8_t BOOLEAN;
 
 typedef UINTN       EFI_STATUS;
 typedef VOID*       EFI_HANDLE;
@@ -31,6 +37,10 @@ typedef VOID*       EFI_HANDLE;
 #define OUT
 #define OPTIONAL
 #define CONST const
+#define INTN int64_t
+
+#define TRUE 1
+#define FASLE 0
 
 // Taken from gnu-efi at
 // https://github.com/vathpela/gnu-efi/blob/master/inc/x86_64/efibind.h
@@ -43,10 +53,21 @@ typedef VOID*       EFI_HANDLE;
 // Forward declare struct for this to work and compile
 typedef struct EFI_SIMPLE_TEXT_INPUT_PROTOCOL EFI_SIMPLE_TEXT_INPUT_PROTOCOL;
 
+typedef struct EFI_BOOT_SERVICES EFI_BOOT_SERVICES;
+
+
+
 typedef struct {
     UINT16  ScanCode;
     CHAR16  UnicodeChar;
 } EFI_INPUT_KEY;
+
+typedef struct {
+    UINT32 Data1;
+    UINT16 Data2;
+    UINT16 Data3;
+    UINT8  Data4[8];
+} EFI_GUID;
 
 typedef 
 EFI_STATUS 
@@ -98,6 +119,21 @@ EFI_STATUS
  IN EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL *This
 );
 
+typedef 
+EFI_STATUS
+(EFIAPI *EFI_TEXT_SET_CURSOR_POS)(
+    IN EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL *This,
+    IN UINTN                           Column,
+    IN UINTN                           Row
+);
+
+typedef 
+EFI_STATUS
+(EFIAPI *EFI_TEXT_ENABLE_CURSOR)(
+    IN EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL *This,
+    IN BOOLEAN                         Visible
+);
+
 typedef struct EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL {
     void*                           Reset;
     EFI_TEXT_STRING                 OutputString;
@@ -106,7 +142,7 @@ typedef struct EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL {
     void*                           SetMode;
     EFI_TEXT_SET_ATTRIBUTE          SetAttribute;
     EFI_TEXT_CLEAR_SCREEN           ClearScreen;
-    void*                           SetCursorPosition;
+    EFI_TEXT_SET_CURSOR_POS         SetCursorPosition;
     void*                           EnableCursor;
     void*                           Mode;
 } EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL;
@@ -135,6 +171,97 @@ typedef struct {
     UINT32  CRC32;
     UINT32  Reserved;
 } EFI_TABLE_HEADER;
+
+
+typedef
+EFI_STATUS
+(EFIAPI *EFI_LOCATE_PROTOCOL) (
+  IN EFI_GUID     *Protocol,
+  IN VOID         *Registration OPTIONAL,
+  OUT VOID        **Interface
+);
+
+struct EFI_BOOT_SERVICES{
+EFI_TABLE_HEADER Hdr;
+//
+//
+// Task Priority Services
+void * RaiseTPL; // EFI 1.0+
+void * RestoreTPL; // EFI 1.0+
+//
+//
+// Memory Services
+void * AllocatePages; // EFI 1.0+
+void * FreePages; // EFI 1.0+
+void * GetMemoryMap; // EFI 1.0+
+void * AllocatePool; // EFI 1.0+
+void * FreePool; // EFI 1.0+
+//
+// Event & Timer Services
+//
+void * CreateEvent; // EFI 1.0+
+void * SetTimer; // EFI 1.0+
+void * WaitForEvent; // EFI 1.0+
+void * SignalEvent; // EFI 1.0+
+void * CloseEvent; // EFI 1.0+
+void * CheckEvent; // EFI 1.0+
+//
+//
+// Protocol Handler Services
+void * InstallProtocolInterface; // EFI 1.0+
+void * ReinstallProtocolInterface; // EFI 1.0+
+void * UninstallProtocolInterface; // EFI 1.0+
+void * HandleProtocol; // EFI 1.0+
+VOID* Reserved; // EFI 1.0+
+void * RegisterProtocolNotify; // EFI 1.0+
+void * LocateHandle; // EFI 1.0+
+void * LocateDevicePath; // EFI 1.0+
+void * InstallConfigurationTable; // EFI 1.0+
+//
+// Image Services
+//
+void * LoadImage; // EFI 1.0+
+void * StartImage; // EFI 1.0+
+void * Exit; // EFI 1.0+
+void * UnloadImage; // EFI 1.0+
+void * ExitBootServices; // EFI 1.0+
+//
+//
+// Miscellaneous Services
+void * GetNextMonotonicCount; // EFI 1.0+
+void * Stall; // EFI 1.0+
+void * SetWatchdogTimer; // EFI 1.0+
+//
+//
+// DriverSupport Services
+void * ConnectController; // EFI 1.1
+void * DisconnectController; // EFI 1.1+
+//// Open and Close Protocol Services
+//
+void * OpenProtocol; // EFI 1.1+
+void * CloseProtocol; // EFI 1.1+
+void * OpenProtocolInformation;// EFI 1.1+
+//
+// Library Services
+//
+void * ProtocolsPerHandle; // EFI 1.1+
+void * LocateHandleBuffer; // EFI 1.1+
+EFI_LOCATE_PROTOCOL LocateProtocol; // EFI 1.1+
+void * InstallMultipleProtocolInterfaces; // EFI 1.1+
+void * UninstallMultipleProtocolInterfaces; // EFI 1.1+
+//
+//
+// 32-bit CRC Services
+void * CalculateCrc32; // EFI 1.1+
+//
+// Miscellaneous Services
+//
+void * CopyMem; // EFI 1.1+
+void * SetMem; // EFI 1.1+
+void * CreateEventEx; // UEFI 2.0+
+};
+
+
 
 typedef struct {
     EFI_TABLE_HEADER Hdr;
@@ -179,7 +306,58 @@ typedef struct {
 	void*                           StandardErrorHandle;
 	void*                           StdErr;
 	EFI_RUNTIME_SERVICES            *RuntimeServices;
-	void*                           BootServices;
+	EFI_BOOT_SERVICES               *BootServices;
 	UINTN                           NumberOfTableEntries;
 	void*                           ConfigurationTable;
 } EFI_SYSTEM_TABLE;
+
+
+// EFI Graphics Output Protocol: UEFI Spec 2.10 section 12.9
+
+typedef struct {
+    UINT32 RedMask;
+    UINT32 GreenMask;
+    UINT32 BlueMask;
+    UINT32 ReservedMask;
+} EFI_PIXEL_BITMASK;
+
+typedef enum {
+    PixelRedGreenBlueReserved8BitPerColor,
+    PixelBlueGreenRedReserved8BitPerColor, // Najczęstszy format!
+    PixelBitMask,
+    PixelBltOnly,
+    PixelFormatMax
+} EFI_GRAPHICS_PIXEL_FORMAT;
+
+typedef struct {
+    UINT32                      Version;
+    UINT32                      HorizontalResolution;
+    UINT32                      VerticalResolution;
+    EFI_GRAPHICS_PIXEL_FORMAT   PixelFormat;
+    EFI_PIXEL_BITMASK           PixelInformation;
+    UINT32                      PixelsPerScanLine; // Ważne! To jest "pitch"
+} EFI_GRAPHICS_MODE_INFORMATION;
+
+typedef struct {
+    UINT32                               MaxMode;
+    UINT32                               Mode;
+    EFI_GRAPHICS_MODE_INFORMATION        *Info;
+    UINTN                                SizeOfInfo;
+    UINT64                               FrameBufferBase;
+    UINTN                                FrameBufferSize;
+} EFI_GRAPHICS_OUTPUT_PROTOCOL_MODE;
+
+typedef
+EFI_STATUS
+(EFIAPI *EFI_GRAPHICS_OUTPUT_PROTOCOL_BLT) (
+    IN VOID *This
+);
+
+typedef struct EFI_GRAPHICS_OUTPUT_PROTOCOL {
+    void* QueryMode;
+    void* SetMode;
+    EFI_GRAPHICS_OUTPUT_PROTOCOL_BLT     Blt;
+    EFI_GRAPHICS_OUTPUT_PROTOCOL_MODE    *Mode;
+} EFI_GRAPHICS_OUTPUT_PROTOCOL;
+
+#endif // EFI_H
