@@ -11,6 +11,7 @@ typedef struct PlatformContext {
     EFI_GRAPHICS_OUTPUT_PROTOCOL    *GOP;
     EFI_SIMPLE_TEXT_INPUT_PROTOCOL  *ConIn;
     EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL *ConOut;
+    EFI_RUNTIME_SERVICES            *RT;
 
     UINTN                           ScreenWidth;
     UINTN                           ScreenHeight;
@@ -42,6 +43,14 @@ void Platform_Sleep(
 EFI_STATUS Platform_PollKey(
     PlatformContext *Platform,
     EFI_INPUT_KEY *Key
+);
+
+EFI_STATUS Platform_EnableGraphicsMode(
+    PlatformContext *Platform
+);
+
+EFI_STATUS Platform_EnableTextMode(
+    PlatformContext *Platform
 );
 
 #endif // PLATFORM_H

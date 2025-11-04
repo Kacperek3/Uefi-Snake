@@ -40,7 +40,7 @@ typedef VOID*       EFI_HANDLE;
 #define INTN int64_t
 
 #define TRUE 1
-#define FASLE 0
+#define FALSE 0
 
 // Taken from gnu-efi at
 // https://github.com/vathpela/gnu-efi/blob/master/inc/x86_64/efibind.h
@@ -134,8 +134,15 @@ EFI_STATUS
     IN BOOLEAN                         Visible
 );
 
+typedef
+(EFIAPI *EFI_TEXT_RESET) (
+    IN EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL *This,
+    IN BOOLEAN                         ExtendedVerification
+);
+
+
 typedef struct EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL {
-    void*                           Reset;
+    EFI_TEXT_RESET                  Reset;
     EFI_TEXT_STRING                 OutputString;
     void*                           TestString;
     void*                           QueryMode;
@@ -181,6 +188,20 @@ EFI_STATUS
   OUT VOID        **Interface
 );
 
+typedef
+EFI_STATUS
+(EFIAPI *EFI_STALL)
+(
+    IN UINTN Microseconds
+);
+
+typedef
+EFI_STATUS
+(EFIAPI *EFI_CHECK_EVENT)
+(
+    IN VOID *Event
+);
+
 struct EFI_BOOT_SERVICES{
 EFI_TABLE_HEADER Hdr;
 //
@@ -204,7 +225,7 @@ void * SetTimer; // EFI 1.0+
 void * WaitForEvent; // EFI 1.0+
 void * SignalEvent; // EFI 1.0+
 void * CloseEvent; // EFI 1.0+
-void * CheckEvent; // EFI 1.0+
+EFI_CHECK_EVENT  CheckEvent; // EFI 1.0+
 //
 //
 // Protocol Handler Services
@@ -229,7 +250,7 @@ void * ExitBootServices; // EFI 1.0+
 //
 // Miscellaneous Services
 void * GetNextMonotonicCount; // EFI 1.0+
-void * Stall; // EFI 1.0+
+EFI_STALL Stall; // EFI 1.0+
 void * SetWatchdogTimer; // EFI 1.0+
 //
 //

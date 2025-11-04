@@ -2,7 +2,8 @@
 .PHONY: all clean image run
 
 # Pliki wejściowe i wyjściowe
-SOURCE = src/main.c src/platform.c src/renderer.c src/renderer.h src/platform.h
+SOURCE = src/main.c src/platform.c src/renderer.c src/gameState.c src/menuState.c src/snakeState.c
+HEADERS = src/efi.h src/renderer.h src/platform.h src/gameState.h src/menuState.h src/snakeState.h
 TARGET = BOOTX64.EFI
 
 # Cross-kompilator MinGW (bez zmian)
@@ -82,7 +83,7 @@ $(IMAGE_FILE): $(TARGET)
 	@echo "--- Obraz dysku gotowy ---"
 
 # Reguła kompilacji programu .EFI
-$(TARGET): $(SOURCE) src/efi.h
+$(TARGET): $(SOURCE) $(HEADERS)
 	@echo "--- Kompilowanie $(SOURCE) do $(TARGET) ---"
 	$(CC) $(CFLAGS) -o $@ $(SOURCE)
 
