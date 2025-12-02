@@ -1,9 +1,0 @@
-{
-    "files.associations": {
-        "*.dbclient-js": "javascript",
-        ".als.json": "jsonc",
-        "efi.h": "c",
-        "limits": "c",
-        "tuple": "c"
-    }
-}
