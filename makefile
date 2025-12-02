@@ -71,9 +71,9 @@ run: all
 # REGUŁY BUDOWANIA
 #
 
-# Reguła budowania obrazu dysku
+# Tworzymy disk image 
 $(IMAGE_FILE): $(TARGET)
-	@echo "--- Tworzenie surowego obrazu dysku $(IMAGE_FILE) (Metoda 2) ---"
+	@echo "--- Tworzenie surowego obrazu dysku $(IMAGE_FILE)---"
 	rm -f $(IMAGE_FILE)
 	dd if=/dev/zero of=$(IMAGE_FILE) bs=1M count=$(IMAGE_SIZE_MB)
 	mformat -i $(IMAGE_FILE) ::
@@ -82,7 +82,7 @@ $(IMAGE_FILE): $(TARGET)
 	mcopy -i $(IMAGE_FILE) $(TARGET) $(EFI_PATH)
 	@echo "--- Obraz dysku gotowy ---"
 
-# Reguła kompilacji programu .EFI
+# Kompilacja
 $(TARGET): $(SOURCE) $(HEADERS)
 	@echo "--- Kompilowanie $(SOURCE) do $(TARGET) ---"
 	$(CC) $(CFLAGS) -o $@ $(SOURCE)

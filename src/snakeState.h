@@ -20,14 +20,14 @@ typedef struct snakeState
 {
     GameState base;
 
-    //data specific to snake state
+    //Data specific to snake state
     Point body[SNAKE_MAX_LENGTH];
     int snakeLength;
 
     Point food;
 
-    int snakeDX; // Delta X
-    int snakeDY; // Delta Y
+    int snakeDX;
+    int snakeDY;
 
     int boardOffsetX;
     int boardOffsetY;
