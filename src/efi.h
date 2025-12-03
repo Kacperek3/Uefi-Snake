@@ -135,6 +135,7 @@ EFI_STATUS
 );
 
 typedef
+EFI_STATUS
 (EFIAPI *EFI_TEXT_RESET) (
     IN EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL *This,
     IN BOOLEAN                         ExtendedVerification
@@ -203,83 +204,83 @@ EFI_STATUS
 );
 
 struct EFI_BOOT_SERVICES{
-EFI_TABLE_HEADER Hdr;
-//
-//
-// Task Priority Services
-void * RaiseTPL; // EFI 1.0+
-void * RestoreTPL; // EFI 1.0+
-//
-//
-// Memory Services
-void * AllocatePages; // EFI 1.0+
-void * FreePages; // EFI 1.0+
-void * GetMemoryMap; // EFI 1.0+
-void * AllocatePool; // EFI 1.0+
-void * FreePool; // EFI 1.0+
-//
-// Event & Timer Services
-//
-void * CreateEvent; // EFI 1.0+
-void * SetTimer; // EFI 1.0+
-void * WaitForEvent; // EFI 1.0+
-void * SignalEvent; // EFI 1.0+
-void * CloseEvent; // EFI 1.0+
-EFI_CHECK_EVENT  CheckEvent; // EFI 1.0+
-//
-//
-// Protocol Handler Services
-void * InstallProtocolInterface; // EFI 1.0+
-void * ReinstallProtocolInterface; // EFI 1.0+
-void * UninstallProtocolInterface; // EFI 1.0+
-void * HandleProtocol; // EFI 1.0+
-void* Reserved; // EFI 1.0+
-void * RegisterProtocolNotify; // EFI 1.0+
-void * LocateHandle; // EFI 1.0+
-void * LocateDevicePath; // EFI 1.0+
-void * InstallConfigurationTable; // EFI 1.0+
-//
-// Image Services
-//
-void * LoadImage; // EFI 1.0+
-void * StartImage; // EFI 1.0+
-void * Exit; // EFI 1.0+
-void * UnloadImage; // EFI 1.0+
-void * ExitBootServices; // EFI 1.0+
-//
-//
-// Miscellaneous Services
-void * GetNextMonotonicCount; // EFI 1.0+
-EFI_STALL Stall; // EFI 1.0+
-void * SetWatchdogTimer; // EFI 1.0+
-//
-//
-// DriverSupport Services
-void * ConnectController; // EFI 1.1
-void * DisconnectController; // EFI 1.1+
-//// Open and Close Protocol Services
-//
-void * OpenProtocol; // EFI 1.1+
-void * CloseProtocol; // EFI 1.1+
-void * OpenProtocolInformation;// EFI 1.1+
-//
-// Library Services
-//
-void * ProtocolsPerHandle; // EFI 1.1+
-void * LocateHandleBuffer; // EFI 1.1+
-EFI_LOCATE_PROTOCOL LocateProtocol; // EFI 1.1+
-void * InstallMultipleProtocolInterfaces; // EFI 1.1+
-void * UninstallMultipleProtocolInterfaces; // EFI 1.1+
-//
-//
-// 32-bit CRC Services
-void * CalculateCrc32; // EFI 1.1+
-//
-// Miscellaneous Services
-//
-void * CopyMem; // EFI 1.1+
-void * SetMem; // EFI 1.1+
-void * CreateEventEx; // UEFI 2.0+
+    EFI_TABLE_HEADER Hdr;
+    //
+    //
+    // Task Priority Services
+    void * RaiseTPL; // EFI 1.0+
+    void * RestoreTPL; // EFI 1.0+
+    //
+    //
+    // Memory Services
+    void * AllocatePages; // EFI 1.0+
+    void * FreePages; // EFI 1.0+
+    void * GetMemoryMap; // EFI 1.0+
+    void * AllocatePool; // EFI 1.0+
+    void * FreePool; // EFI 1.0+
+    //
+    // Event & Timer Services
+    //
+    void * CreateEvent; // EFI 1.0+
+    void * SetTimer; // EFI 1.0+
+    void * WaitForEvent; // EFI 1.0+
+    void * SignalEvent; // EFI 1.0+
+    void * CloseEvent; // EFI 1.0+
+    EFI_CHECK_EVENT  CheckEvent; // EFI 1.0+
+    //
+    //
+    // Protocol Handler Services
+    void * InstallProtocolInterface; // EFI 1.0+
+    void * ReinstallProtocolInterface; // EFI 1.0+
+    void * UninstallProtocolInterface; // EFI 1.0+
+    void * HandleProtocol; // EFI 1.0+
+    void* Reserved; // EFI 1.0+
+    void * RegisterProtocolNotify; // EFI 1.0+
+    void * LocateHandle; // EFI 1.0+
+    void * LocateDevicePath; // EFI 1.0+
+    void * InstallConfigurationTable; // EFI 1.0+
+    //
+    // Image Services
+    //
+    void * LoadImage; // EFI 1.0+
+    void * StartImage; // EFI 1.0+
+    void * Exit; // EFI 1.0+
+    void * UnloadImage; // EFI 1.0+
+    void * ExitBootServices; // EFI 1.0+
+    //
+    //
+    // Miscellaneous Services
+    void * GetNextMonotonicCount; // EFI 1.0+
+    EFI_STALL Stall; // EFI 1.0+
+    void * SetWatchdogTimer; // EFI 1.0+
+    //
+    //
+    // DriverSupport Services
+    void * ConnectController; // EFI 1.1
+    void * DisconnectController; // EFI 1.1+
+    //// Open and Close Protocol Services
+    //
+    void * OpenProtocol; // EFI 1.1+
+    void * CloseProtocol; // EFI 1.1+
+    void * OpenProtocolInformation;// EFI 1.1+
+    //
+    // Library Services
+    //
+    void * ProtocolsPerHandle; // EFI 1.1+
+    void * LocateHandleBuffer; // EFI 1.1+
+    EFI_LOCATE_PROTOCOL LocateProtocol; // EFI 1.1+
+    void * InstallMultipleProtocolInterfaces; // EFI 1.1+
+    void * UninstallMultipleProtocolInterfaces; // EFI 1.1+
+    //
+    //
+    // 32-bit CRC Services
+    void * CalculateCrc32; // EFI 1.1+
+    //
+    // Miscellaneous Services
+    //
+    void * CopyMem; // EFI 1.1+
+    void * SetMem; // EFI 1.1+
+    void * CreateEventEx; // UEFI 2.0+
 };
 
 
@@ -344,7 +345,7 @@ typedef struct {
 
 typedef enum {
     PixelRedGreenBlueReserved8BitPerColor,
-    PixelBlueGreenRedReserved8BitPerColor, // Najczęstszy format!
+    PixelBlueGreenRedReserved8BitPerColor,
     PixelBitMask,
     PixelBltOnly,
     PixelFormatMax
