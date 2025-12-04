@@ -150,20 +150,23 @@ static void snakeState_Draw(GameState *self, PlatformContext *Platform) {
                   state->boardOffsetX + (state->food.x * SNAKE_SEGMENT_SIZE), 
                   state->boardOffsetY + (state->food.y * SNAKE_SEGMENT_SIZE), 
                   SNAKE_SEGMENT_SIZE, SNAKE_SEGMENT_SIZE, 
-                  0x000000FF); //red
+                  0x000000FF);
 
     // Draw snake
     for (int i = 0; i < state->snakeLength; i++) {
-        UINT32 color = 0x00099000; // green
+        UINTN posX = state->boardOffsetX + (state->body[i].x * SNAKE_SEGMENT_SIZE);
+        UINTN posY = state->boardOffsetY + (state->body[i].y * SNAKE_SEGMENT_SIZE);
+
         if (i == 0) {
-            color = 0x0000FF00; // head
+            DrawSnakeHead(Platform, posX, posY, SNAKE_SEGMENT_SIZE);
+        } else {
+            DrawRectangle(Platform, 
+                        posX, 
+                        posY, 
+                        SNAKE_SEGMENT_SIZE, 
+                        SNAKE_SEGMENT_SIZE, 
+                        0x00099000);
         }
-        
-        DrawRectangle(Platform, 
-                      state->boardOffsetX + (state->body[i].x * SNAKE_SEGMENT_SIZE), 
-                      state->boardOffsetY + (state->body[i].y * SNAKE_SEGMENT_SIZE), 
-                      SNAKE_SEGMENT_SIZE, SNAKE_SEGMENT_SIZE, 
-                      color);
     }
 }
 

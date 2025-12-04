@@ -22,6 +22,31 @@ void DrawRectangle(PlatformContext *Platform, UINTN x, UINTN y, UINTN width, UIN
         }
     }
 }
+// renderer.c
+
+void DrawSnakeHead(PlatformContext *Platform, UINTN x, UINTN y, UINTN size) {
+    DrawRectangle(Platform, x, y, size, size, 0x0000FF00);
+
+    UINT32 eyeColor = 0x00FF0000;
+    
+    UINTN eyeSize = size / 4;
+    if (eyeSize == 0) eyeSize = 1;
+
+    UINTN margin = size / 5;
+
+    DrawRectangle(Platform, 
+                  x + margin,          
+                  y + margin,           
+                  eyeSize, eyeSize,
+                  eyeColor);
+
+    DrawRectangle(Platform, 
+                  x + size - margin - eyeSize, 
+                  y + margin,                  
+                  eyeSize, eyeSize, 
+                  eyeColor);
+}
+
 
 void DrawFrame(PlatformContext *Platform, UINTN x, UINTN y, UINTN width, UINTN height, UINTN thickness, UINT32 Color) {
     if (Platform->GOP == NULL) return;
