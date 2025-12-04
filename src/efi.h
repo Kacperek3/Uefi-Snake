@@ -336,28 +336,14 @@ typedef struct {
 
 // EFI Graphics Output Protocol: UEFI Spec 2.10 section 12.9
 
-typedef struct {
-    UINT32 RedMask;
-    UINT32 GreenMask;
-    UINT32 BlueMask;
-    UINT32 ReservedMask;
-} EFI_PIXEL_BITMASK;
-
-typedef enum {
-    PixelRedGreenBlueReserved8BitPerColor,
-    PixelBlueGreenRedReserved8BitPerColor,
-    PixelBitMask,
-    PixelBltOnly,
-    PixelFormatMax
-} EFI_GRAPHICS_PIXEL_FORMAT;
 
 typedef struct {
     UINT32                      Version;
     UINT32                      HorizontalResolution;
     UINT32                      VerticalResolution;
-    EFI_GRAPHICS_PIXEL_FORMAT   PixelFormat;
-    EFI_PIXEL_BITMASK           PixelInformation;
-    UINT32                      PixelsPerScanLine; // Ważne! To jest "pitch"
+    void*                       pixelformat;
+    void*                       pixelinformation;
+    UINT32                      PixelsPerScanLine;
 } EFI_GRAPHICS_MODE_INFORMATION;
 
 typedef struct {
@@ -369,16 +355,12 @@ typedef struct {
     UINTN                                FrameBufferSize;
 } EFI_GRAPHICS_OUTPUT_PROTOCOL_MODE;
 
-typedef
-EFI_STATUS
-(EFIAPI *EFI_GRAPHICS_OUTPUT_PROTOCOL_BLT) (
-    IN VOID *This
-);
+
 
 typedef struct EFI_GRAPHICS_OUTPUT_PROTOCOL {
     void* QueryMode;
     void* SetMode;
-    EFI_GRAPHICS_OUTPUT_PROTOCOL_BLT     Blt;
+    void* Blt;
     EFI_GRAPHICS_OUTPUT_PROTOCOL_MODE    *Mode;
 } EFI_GRAPHICS_OUTPUT_PROTOCOL;
 

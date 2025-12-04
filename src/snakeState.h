@@ -20,7 +20,6 @@ typedef struct snakeState
 {
     GameState base;
 
-    //Data specific to snake state
     Point body[SNAKE_MAX_LENGTH];
     int snakeLength;
 

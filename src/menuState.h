@@ -3,9 +3,6 @@
 
 #include "gameState.h"
 
-// "Dziedziczenie" w C
-// Struktura "dziecka" musi mieć strukturę "rodzica"
-// jako *PIERWSZE* pole.
 
 
 #define EFI_BLACK         0x00

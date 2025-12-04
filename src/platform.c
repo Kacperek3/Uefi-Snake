@@ -8,12 +8,10 @@ EFI_STATUS Platform_Init(PlatformContext *Platform, EFI_SYSTEM_TABLE *SystemTabl
     Platform->ConOut = SystemTable->ConOut;
     Platform->RT = SystemTable->RuntimeServices; 
 
-    // initial values
     Platform->GOP = NULL;
     Platform->ScreenWidth = 0;
     Platform->ScreenHeight = 0;
     
-    // Set text mode by default
     return Platform_EnableTextMode(Platform);
 }
 
@@ -43,18 +41,16 @@ EFI_STATUS Platform_PollKey(PlatformContext *Platform, EFI_INPUT_KEY *Key) {
 }
 
 EFI_STATUS Platform_EnableGraphicsMode(PlatformContext *Platform) {
-    // Znajdź GOP (jeśli jeszcze go nie mamy)
     if (Platform->GOP == NULL) {
         EFI_GUID GopGuid = {0x9042a9de,0x23dc,0x4a38,\
         {0x96,0xfb,0x7a,0xde,0xd0,0x80,0x51,0x6a}};
         
         EFI_STATUS Status = Platform->BS->LocateProtocol(&GopGuid, NULL, (VOID**)&Platform->GOP);
         if (Status != EFI_SUCCESS) {
-            return Status; // Nie udało się znaleźć GOP
+            return Status; 
         }
     }
 
-    // Odczytaj wymiary (GOP sam ustawił domyślny tryb)
     Platform->ScreenWidth = Platform->GOP->Mode->Info->HorizontalResolution;
     Platform->ScreenHeight = Platform->GOP->Mode->Info->VerticalResolution;
     

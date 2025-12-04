@@ -18,13 +18,11 @@ typedef struct PlatformContext {
 } PlatformContext;
 
 
-// Initializate all platform services
 EFI_STATUS Platform_Init(
     PlatformContext *Platform,
     EFI_SYSTEM_TABLE *SystemTable
 );
 
-// Draw a pixel at (x, y) with specified color
 void Platform_DrawPixel(
     PlatformContext *Platform,
     UINTN x,
@@ -32,14 +30,12 @@ void Platform_DrawPixel(
     UINT32 Color
 );
 
-// Sleep for specified milliseconds
 void Platform_Sleep(
     PlatformContext *Platform,
     UINTN milliseconds
 );
 
 
-// Poll for a key press
 EFI_STATUS Platform_PollKey(
     PlatformContext *Platform,
     EFI_INPUT_KEY *Key

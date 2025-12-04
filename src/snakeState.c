@@ -8,7 +8,6 @@ int pseudo_rand(void) {
 }
 
 static void Snake_PlaceFood(snakeState *state) {
-    // Simple random position generation
     state->food.x = pseudo_rand() % SNAKE_GRID_WIDTH;
     state->food.y = pseudo_rand() % SNAKE_GRID_HEIGHT;
 }
@@ -46,7 +45,7 @@ static void snakeState_Enter(GameState *self, PlatformContext *Platform) {
 
 
 static void snakeState_Exit(GameState *self, PlatformContext *Platform) {
-    // To be implemented
+
 }
 
 static void snakeState_HandleInput(GameState *self, PlatformContext *Platform, EFI_INPUT_KEY *Key, GameStateManager *Manager) {
@@ -155,9 +154,9 @@ static void snakeState_Draw(GameState *self, PlatformContext *Platform) {
 
     // Draw snake
     for (int i = 0; i < state->snakeLength; i++) {
-        UINT32 color = 0x0000FF00; // green
+        UINT32 color = 0x00099000; // green
         if (i == 0) {
-            color = 0x0033FF33; // head
+            color = 0x0000FF00; // head
         }
         
         DrawRectangle(Platform, 

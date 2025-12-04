@@ -25,12 +25,15 @@ void DrawRectangle(PlatformContext *Platform, UINTN x, UINTN y, UINTN width, UIN
 
 void DrawFrame(PlatformContext *Platform, UINTN x, UINTN y, UINTN width, UINTN height, UINTN thickness, UINT32 Color) {
     if (Platform->GOP == NULL) return;
-
+    
+    
+    //horizontal
     for (UINTN t = 0; t < thickness; ++t) {
         DrawRectangle(Platform, x, y + t, width, 1, Color);
         DrawRectangle(Platform, x, y + height - 1 - t, width, 1, Color);
     }
 
+    // vertical
     for (UINTN t = 0; t < thickness; ++t) {
         DrawRectangle(Platform, x + t, y, 1, height, Color);
         DrawRectangle(Platform, x + width - 1 - t, y, 1, height, Color);
