@@ -55,19 +55,19 @@ static void Menu_Draw(GameState *self, PlatformContext *Platform) {
     Platform->ConOut->SetCursorPosition(Platform->ConOut, 10, 5);
     if (state->selectedOption == 0) {
         Platform->ConOut->SetAttribute(Platform->ConOut, EFI_BACKGROUND_WHITE | EFI_BLACK);
-        Platform->ConOut->OutputString(Platform->ConOut, u"> GRAJ     ");
+        Platform->ConOut->OutputString(Platform->ConOut, u"> PLAY     ");
     } else {
         Platform->ConOut->SetAttribute(Platform->ConOut, EFI_WHITE | EFI_BACKGROUND_BLACK);
-        Platform->ConOut->OutputString(Platform->ConOut, u"  GRAJ     ");
+        Platform->ConOut->OutputString(Platform->ConOut, u"  PLAY     ");
     }
 
     Platform->ConOut->SetCursorPosition(Platform->ConOut, 10, 6);
     if (state->selectedOption == 1) {
         Platform->ConOut->SetAttribute(Platform->ConOut, EFI_BACKGROUND_WHITE | EFI_BLACK);
-        Platform->ConOut->OutputString(Platform->ConOut, u"> WYJDZ    ");
+        Platform->ConOut->OutputString(Platform->ConOut, u"> EXIT    ");
     } else {
         Platform->ConOut->SetAttribute(Platform->ConOut, EFI_WHITE | EFI_BACKGROUND_BLACK);
-        Platform->ConOut->OutputString(Platform->ConOut, u"  WYJDZ    ");
+        Platform->ConOut->OutputString(Platform->ConOut, u"  EXIT    ");
     }
     
     Platform->ConOut->SetAttribute(Platform->ConOut, EFI_WHITE | EFI_BACKGROUND_BLACK); 

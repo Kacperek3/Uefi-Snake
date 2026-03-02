@@ -36,8 +36,8 @@ ifeq ($(OS),Darwin)
     OVMF_CODE_PATH = /usr/local/opt/ovmf/share/OVMF/OvmfX64/OVMF_CODE.fd
 else ifeq ($(OS),Linux)
     ACCEL = -enable-kvm
-    OVMF_VARS_PATH = /usr/share/OVMF/OVMF_VARS_4M.fd
-    OVMF_CODE_PATH = /usr/share/OVMF/OVMF_CODE_4M.fd
+    OVMF_VARS_PATH = /usr/share/OVMF/x64/OVMF_VARS.4m.fd
+    OVMF_CODE_PATH = /usr/share/OVMF/x64/OVMF_CODE.4m.fd
 else
     $(error "Nieobsługiwany system operacyjny: $(OS)")
 endif
@@ -48,11 +48,12 @@ all: $(IMAGE_FILE)
 
 # run the qemu with disk image
 run: all
-	@echo "Resetowanie NVRAM (my_ovmf_vars.fd)"
+	@echo "Reset NVRAM (my_ovmf_vars.fd)"
 	cp $(OVMF_VARS_PATH) my_ovmf_vars.fd
-	@echo "Uruchamianie QEMU"
+	@echo "Running QEMU"
 	qemu-system-x86_64 \
     	$(ACCEL) \
+			-display sdl \
     	-m 1G \
     	-drive if=pflash,format=raw,readonly=on,file=$(OVMF_CODE_PATH) \
     	-drive if=pflash,format=raw,file=my_ovmf_vars.fd \
@@ -60,20 +61,20 @@ run: all
 #source man qemu
 
 $(IMAGE_FILE): $(TARGET)
-	@echo "Tworzenie surowego obrazu dysku $(IMAGE_FILE)"
+	@echo "Creating raw disk image $(IMAGE_FILE)"
 	rm -f $(IMAGE_FILE)
 	dd if=/dev/zero of=$(IMAGE_FILE) bs=1M count=$(IMAGE_SIZE_MB)
 	mformat -i $(IMAGE_FILE) ::
 	mmd -i $(IMAGE_FILE) ::/EFI
 	mmd -i $(IMAGE_FILE) $(EFI_PATH)
 	mcopy -i $(IMAGE_FILE) $(TARGET) $(EFI_PATH)
-	@echo "Obraz dysku gotowy"
+	@echo "Disk Image is ready"
 
 # compile
 $(TARGET): $(SOURCE) $(HEADERS)
-	@echo "Kompilowanie $(SOURCE) do $(TARGET)"
+	@echo "Compile $(SOURCE) in to $(TARGET)"
 	$(CC) $(CFLAGS) -o $@ $(SOURCE)
 
 clean:
-	@echo "Sprzątanie"
+	@echo "Cleaning"
 	rm -f $(TARGET) $(IMAGE_FILE) my_ovmf_vars.fd *.o
