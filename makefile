@@ -1,8 +1,8 @@
 .POSIX:
 .PHONY: all clean image run
 
-SOURCE = src/main.c src/platform.c src/renderer.c src/gameState.c src/menuState.c src/snakeState.c
-HEADERS = src/efi.h src/renderer.h src/platform.h src/gameState.h src/menuState.h src/snakeState.h
+SOURCE = src/main.c src/platform.c src/renderer.c src/gameState.c src/menuState.c src/snakeState.c src/bootArch.c src/optionsManager.c
+HEADERS = src/renderer.h src/platform.h src/gameState.h src/menuState.h src/snakeState.h src/bootArch.h src/optionsManager.h src/archLogo.h
 TARGET = BOOTX64.EFI
 
 
@@ -19,7 +19,11 @@ CFLAGS = \
     -Wpedantic \
     -mno-red-zone \
     -ffreestanding \
-    -nostdlib 
+    -nostdlib \
+		-Iuefi_inc \
+		-Iuefi_inc/x86_64 \
+		-Iuefi_inc/protocol
+
 # source https://www.systutorials.com/docs/linux/man/1-x86_64-w64-mingw32-gcc/
 
 #variables to create image

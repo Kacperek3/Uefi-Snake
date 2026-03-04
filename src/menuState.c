@@ -1,4 +1,5 @@
 #include "menuState.h"
+#include "archLogo.h"
 #include "efiapi.h"
 #include "gameState.h"
 #include "optionsManager.h"
@@ -41,19 +42,23 @@ static void Menu_Enter(GameState *self, PlatformContext *Platform) {
     Platform->ConOut->ClearScreen(Platform->ConOut);
 
     Platform->ConOut->SetCursorPosition(Platform->ConOut, 10, 2);
+    Platform->ConOut->SetAttribute(Platform->ConOut, EFI_BACKGROUND_BLACK | EFI_YELLOW);
     Platform->ConOut->OutputString(Platform->ConOut, u"S N A K E   in   U E F I");
 
     Platform->ConOut->SetCursorPosition(Platform->ConOut, 0, 16);
     Platform->ConOut->SetAttribute(Platform->ConOut, EFI_BACKGROUND_BLACK | EFI_RED);
-    Platform->ConOut->OutputString(Platform->ConOut, u"w - UP s - DOWN");
-
+    Platform->ConOut->OutputString(Platform->ConOut, u"[ w ] - MOVE UP");
     Platform->ConOut->SetCursorPosition(Platform->ConOut, 0, 17);
+    Platform->ConOut->OutputString(Platform->ConOut, u"[ s ] - MOVE DOWN");
+
+    Platform->ConOut->SetCursorPosition(Platform->ConOut, 0, 18);
     Platform->ConOut->SetAttribute(Platform->ConOut, EFI_BACKGROUND_BLACK | EFI_RED);
     Platform->ConOut->OutputString(Platform->ConOut, u"SPACE - SELECT");
 
     Platform->ConOut->SetAttribute(Platform->ConOut, EFI_WHITE | EFI_BACKGROUND_BLACK);
     Platform->ConOut->SetCursorPosition(Platform->ConOut, 0, 20);
     Platform->ConOut->OutputString(Platform->ConOut, u"Author: Kacperek3");
+    DrawArchLogo(Platform, 30, 5);
 }
 
 static void Menu_HandleInput(GameState *self, PlatformContext *Platform, EFI_INPUT_KEY *Key,
@@ -111,12 +116,12 @@ void MenuState_Init(MenuState *State, EFI_SYSTEM_TABLE *SystemTable) {
 
     OptionsManager_Init(&State->optMgr, 3, SystemTable);
     FillOption(&State->optMgr, 0, L"GAME", 10, 5, Action_StartGame);
-    FillOption(&State->optMgr, 1, L"LEVEL ", 10, 6, Action_ChoseLevel);
-    FillOption(&State->optMgr, 2, L"EXIT", 10, 7, Action_Exit);
+    FillOption(&State->optMgr, 1, L"LEVEL ", 10, 7, Action_ChoseLevel);
+    FillOption(&State->optMgr, 2, L"EXIT", 10, 9, Action_Exit);
     State->currentOption = &State->optMgr;
 
     OptionsManager_Init(&State->levMgr, 3, SystemTable);
     FillOption(&State->levMgr, 0, L"EASY", 10, 5, Action_Easy);
-    FillOption(&State->levMgr, 1, L"MEDIUM", 10, 6, Action_Medium);
-    FillOption(&State->levMgr, 2, L"HARD", 10, 7, Action_Hard);
+    FillOption(&State->levMgr, 1, L"MEDIUM", 10, 7, Action_Medium);
+    FillOption(&State->levMgr, 2, L"HARD", 10, 9, Action_Hard);
 }

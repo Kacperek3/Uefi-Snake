@@ -1,6 +1,7 @@
 #ifndef MENU_STATE_H
 #define MENU_STATE_H
 
+#include "archLogo.h"
 #include "gameState.h"
 #include "optionsManager.h"
 
