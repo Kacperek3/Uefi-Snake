@@ -3,14 +3,18 @@
 #ifndef PLATFORM_H
 #define PLATFORM_H
 
-#include "efi.h"
+#include <efi.h>
+#include <efilib.h>
+#include <efistdarg.h>
+#include <efifs.h>
+
 
 
 typedef struct PlatformContext {
     EFI_BOOT_SERVICES               *BS;
     EFI_GRAPHICS_OUTPUT_PROTOCOL    *GOP;
-    EFI_SIMPLE_TEXT_INPUT_PROTOCOL  *ConIn;
-    EFI_SIMPLE_TEXT_OUTPUT_PROTOCOL *ConOut;
+    SIMPLE_INPUT_INTERFACE  *ConIn;
+    EFI_SIMPLE_TEXT_OUT_PROTOCOL *ConOut;
     EFI_RUNTIME_SERVICES            *RT;
 
     UINTN                           ScreenWidth;

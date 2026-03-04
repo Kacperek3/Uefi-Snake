@@ -2,7 +2,7 @@
 .PHONY: all clean image run
 
 SOURCE = src/main.c src/platform.c src/renderer.c src/gameState.c src/menuState.c src/snakeState.c src/bootArch.c src/optionsManager.c
-HEADERS = src/renderer.h src/platform.h src/gameState.h src/menuState.h src/snakeState.h src/bootArch.h src/optionsManager.h src/archLogo.h
+HEADERS = src/renderer.h src/platform.h src/gameState.h src/menuState.h src/snakeState.h src/bootArch.h src/optionsManager.h src/archLogo.h src/windowsLogo.h
 TARGET = BOOTX64.EFI
 
 

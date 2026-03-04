@@ -3,6 +3,7 @@
 #include "efiapi.h"
 #include "gameState.h"
 #include "optionsManager.h"
+#include "windowsLogo.h"
 
 //---------------------------------------------------------
 //                  optMgr
@@ -41,9 +42,11 @@ static void Menu_Enter(GameState *self, PlatformContext *Platform) {
     Platform_EnableTextMode(Platform);
     Platform->ConOut->ClearScreen(Platform->ConOut);
 
-    Platform->ConOut->SetCursorPosition(Platform->ConOut, 10, 2);
+    Platform->ConOut->SetCursorPosition(Platform->ConOut, 6, 2);
     Platform->ConOut->SetAttribute(Platform->ConOut, EFI_BACKGROUND_BLACK | EFI_YELLOW);
-    Platform->ConOut->OutputString(Platform->ConOut, u"S N A K E   in   U E F I");
+    Platform->ConOut->OutputString(Platform->ConOut, u"S N A K E  B O O T L O A D E R");
+    Platform->ConOut->SetCursorPosition(Platform->ConOut, 16, 3);
+    Platform->ConOut->OutputString(Platform->ConOut, u"in U E F I");
 
     Platform->ConOut->SetCursorPosition(Platform->ConOut, 0, 16);
     Platform->ConOut->SetAttribute(Platform->ConOut, EFI_BACKGROUND_BLACK | EFI_RED);
@@ -58,7 +61,8 @@ static void Menu_Enter(GameState *self, PlatformContext *Platform) {
     Platform->ConOut->SetAttribute(Platform->ConOut, EFI_WHITE | EFI_BACKGROUND_BLACK);
     Platform->ConOut->SetCursorPosition(Platform->ConOut, 0, 20);
     Platform->ConOut->OutputString(Platform->ConOut, u"Author: Kacperek3");
-    DrawArchLogo(Platform, 30, 5);
+    DrawArchLogo(Platform, 28, 5);
+    DrawWindowsLogo(Platform, 30, 15);
 }
 
 static void Menu_HandleInput(GameState *self, PlatformContext *Platform, EFI_INPUT_KEY *Key,
@@ -101,7 +105,6 @@ static void Menu_Draw(GameState *self, PlatformContext *Platform) {
             Platform->ConOut->SetAttribute(Platform->ConOut, EFI_WHITE | EFI_BACKGROUND_BLACK);
             Platform->ConOut->OutputString(Platform->ConOut, L"  ");
         }
-
         Platform->ConOut->OutputString(Platform->ConOut, opt->Text);
     }
     Platform->ConOut->SetAttribute(Platform->ConOut, EFI_WHITE | EFI_BACKGROUND_BLACK);
@@ -115,13 +118,13 @@ void MenuState_Init(MenuState *State, EFI_SYSTEM_TABLE *SystemTable) {
     State->base.Draw = Menu_Draw;
 
     OptionsManager_Init(&State->optMgr, 3, SystemTable);
-    FillOption(&State->optMgr, 0, L"GAME", 10, 5, Action_StartGame);
-    FillOption(&State->optMgr, 1, L"LEVEL ", 10, 7, Action_ChoseLevel);
-    FillOption(&State->optMgr, 2, L"EXIT", 10, 9, Action_Exit);
+    FillOption(&State->optMgr, 0, L"GAME", 6, 7, Action_StartGame);
+    FillOption(&State->optMgr, 1, L"LEVEL ", 6, 9, Action_ChoseLevel);
+    FillOption(&State->optMgr, 2, L"EXIT", 6, 11, Action_Exit);
     State->currentOption = &State->optMgr;
 
     OptionsManager_Init(&State->levMgr, 3, SystemTable);
-    FillOption(&State->levMgr, 0, L"EASY", 10, 5, Action_Easy);
-    FillOption(&State->levMgr, 1, L"MEDIUM", 10, 7, Action_Medium);
-    FillOption(&State->levMgr, 2, L"HARD", 10, 9, Action_Hard);
+    FillOption(&State->levMgr, 0, L"EASY", 6, 7, Action_Easy);
+    FillOption(&State->levMgr, 1, L"MEDIUM", 6, 9, Action_Medium);
+    FillOption(&State->levMgr, 2, L"HARD", 6, 11, Action_Hard);
 }
