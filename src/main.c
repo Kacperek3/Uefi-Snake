@@ -7,15 +7,14 @@
 
 EFI_STATUS EFIAPI efi_main(EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable) {
     (void)ImageHandle;
-
     PlatformContext Platform;
     GameStateManager Manager;
 
+    Platform.ImageHandle = ImageHandle;
+    Platform.SystemTable = SystemTable;
+
     MenuState g_menuState;
     snakeState g_snakeState;
-
-    LoadExt2Driver(ImageHandle, SystemTable);
-    FindAndBootArch(ImageHandle, SystemTable);
 
     EFI_STATUS Status = Platform_Init(&Platform, SystemTable);
     if (Status != EFI_SUCCESS) {

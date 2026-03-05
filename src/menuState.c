@@ -25,14 +25,17 @@ void Action_Exit(GameStateManager *Manager) {
 void Action_Easy(GameStateManager *self) {
     MenuState *state = (MenuState *)self->currentState;
     state->currentOption = &state->optMgr;
+    self->Platform->Level = EASY;
 }
 void Action_Medium(GameStateManager *self) {
     MenuState *state = (MenuState *)self->currentState;
     state->currentOption = &state->optMgr;
+    self->Platform->Level = MEDIUM;
 }
 void Action_Hard(GameStateManager *self) {
     MenuState *state = (MenuState *)self->currentState;
     state->currentOption = &state->optMgr;
+    self->Platform->Level = HARD;
 }
 //----------------------------------------------------------
 
@@ -71,7 +74,6 @@ static void Menu_HandleInput(GameState *self, PlatformContext *Platform, EFI_INP
     (void)Platform;
 
     if (Key) {
-
         if (Key->UnicodeChar == u'w')
             OptionUp(state->currentOption);
         if (Key->UnicodeChar == u's')
