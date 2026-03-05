@@ -1,4 +1,5 @@
 #include "snakeState.h"
+#include "art.h"
 #include "bootArch.h"
 #include "renderer.h"
 
@@ -52,6 +53,18 @@ static void snakeState_Enter(GameState *self, PlatformContext *Platform) {
     state->snakeDY = 0;
 
     Snake_PlaceFood(state);
+
+    // UINT32 artColor = 0x00AAAAAA;
+    // UINTN dotSize = 4;
+    UINT32 archColor = 0x001793D1;
+    // int artWidth = 18 * (2 * dotSize);
+
+    // RenderBrailleArt(Platform, SkullAsset, SkullLines, 250, (Platform->ScreenHeight / 2) - 35,
+    //                 dotSize, artColor);
+    RenderColoredWindows(Platform, WindowsAsset, WindowsLines, 180,
+                         (Platform->ScreenHeight / 2) - 35, 2);
+    RenderBrailleArt(Platform, ArchBrailleAsset, ArchBrailleLines, 1000,
+                     (Platform->ScreenHeight / 2) - 35, 2, archColor);
 }
 
 static void snakeState_Exit(GameState *self, PlatformContext *Platform) {}
@@ -150,8 +163,18 @@ static void snakeState_Draw(GameState *self, PlatformContext *Platform) {
 
     DrawRectangle(Platform, state->boardOffsetX, state->boardOffsetY, frameWidth, frameHeight,
                   0x00000000);
+
+    UINT32 frameColor;
+    if (Platform->Level == EASY) {
+        frameColor = 0x0000FF00;
+    } else if (Platform->Level == MEDIUM) {
+        frameColor = 0x00FFFF00;
+    } else {
+        frameColor = 0x00FF0000;
+    }
+
     DrawFrame(Platform, state->boardOffsetX - 2, state->boardOffsetY - 2, frameWidth + 4,
-              frameHeight + 4, 2, 0x00AAAAAA);
+              frameHeight + 4, 2, frameColor);
     // ------------
 
     // Draw food and
