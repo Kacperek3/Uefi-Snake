@@ -1,21 +1,33 @@
 #include "menuState.h"
-#include "archLogo.h"
+#include "art.h"
+#include "bootArch.h"
 #include "efiapi.h"
+#include "eficon.h"
 #include "gameState.h"
 #include "optionsManager.h"
-#include "windowsLogo.h"
-
 //---------------------------------------------------------
 //                  optMgr
 void Action_StartGame(GameStateManager *Manager) {
     StateManager_ChangeState(Manager, Manager->snakeState);
 }
+
 void Action_ChoseLevel(GameStateManager *self) {
     MenuState *state = (MenuState *)self->currentState;
     state->currentOption = &state->levMgr;
+
+    state->base.Enter((GameState *)state, self->Platform);
 }
+
 void Action_Exit(GameStateManager *Manager) {
     Manager->currentState = NULL;
+}
+
+void Action_Diagnostics(GameStateManager *Manager) {
+    MenuState *state = (MenuState *)Manager->currentState;
+    Platform_EnableTextMode(Manager->Platform);
+    ScanAndPrintOSInfo(Manager->Platform->ImageHandle, Manager->Platform->SystemTable);
+
+    state->base.Enter((GameState *)state, Manager->Platform);
 }
 //----------------------------------------------------------
 
@@ -26,23 +38,31 @@ void Action_Easy(GameStateManager *self) {
     MenuState *state = (MenuState *)self->currentState;
     state->currentOption = &state->optMgr;
     self->Platform->Level = EASY;
+
+    state->base.Enter((GameState *)state, self->Platform);
 }
+
 void Action_Medium(GameStateManager *self) {
     MenuState *state = (MenuState *)self->currentState;
     state->currentOption = &state->optMgr;
     self->Platform->Level = MEDIUM;
+
+    state->base.Enter((GameState *)state, self->Platform);
 }
+
 void Action_Hard(GameStateManager *self) {
     MenuState *state = (MenuState *)self->currentState;
     state->currentOption = &state->optMgr;
     self->Platform->Level = HARD;
+
+    state->base.Enter((GameState *)state, self->Platform);
 }
 //----------------------------------------------------------
 
 static void Menu_Enter(GameState *self, PlatformContext *Platform) {
     MenuState *state = (MenuState *)self;
-
-    Platform_EnableTextMode(Platform);
+    (void)state;
+    Platform_EnableGraphicsMode(Platform);
     Platform->ConOut->ClearScreen(Platform->ConOut);
 
     Platform->ConOut->SetCursorPosition(Platform->ConOut, 6, 2);
@@ -51,21 +71,35 @@ static void Menu_Enter(GameState *self, PlatformContext *Platform) {
     Platform->ConOut->SetCursorPosition(Platform->ConOut, 16, 3);
     Platform->ConOut->OutputString(Platform->ConOut, u"in U E F I");
 
-    Platform->ConOut->SetCursorPosition(Platform->ConOut, 0, 16);
-    Platform->ConOut->SetAttribute(Platform->ConOut, EFI_BACKGROUND_BLACK | EFI_RED);
-    Platform->ConOut->OutputString(Platform->ConOut, u"[ w ] - MOVE UP");
-    Platform->ConOut->SetCursorPosition(Platform->ConOut, 0, 17);
-    Platform->ConOut->OutputString(Platform->ConOut, u"[ s ] - MOVE DOWN");
+    UINT32 archColor = 0x001793D1;
+    Platform->ConOut->SetCursorPosition(Platform->ConOut, 29, 13);
+    Platform->ConOut->SetAttribute(Platform->ConOut, EFI_BACKGROUND_BLACK | EFI_CYAN);
+    Platform->ConOut->OutputString(Platform->ConOut, u"I USE ARCH BTW");
+
+    Platform->ConOut->SetCursorPosition(Platform->ConOut, 25, 23);
+    Platform->ConOut->SetAttribute(Platform->ConOut, EFI_BACKGROUND_BLACK | EFI_LIGHTMAGENTA);
+    Platform->ConOut->OutputString(Platform->ConOut, u"TASK FAILED SUCCESFULLY");
 
     Platform->ConOut->SetCursorPosition(Platform->ConOut, 0, 18);
+    Platform->ConOut->SetAttribute(Platform->ConOut, EFI_BACKGROUND_BLACK | EFI_GREEN);
+    Platform->ConOut->OutputString(Platform->ConOut, u"WIN TO RUN BETTER OS :)");
+
+    Platform->ConOut->SetCursorPosition(Platform->ConOut, 0, 20);
+    Platform->ConOut->SetAttribute(Platform->ConOut, EFI_BACKGROUND_BLACK | EFI_RED);
+    Platform->ConOut->OutputString(Platform->ConOut, u"[ w ] - MOVE UP");
+    Platform->ConOut->SetCursorPosition(Platform->ConOut, 0, 21);
+    Platform->ConOut->OutputString(Platform->ConOut, u"[ s ] - MOVE DOWN");
+
+    Platform->ConOut->SetCursorPosition(Platform->ConOut, 0, 22);
     Platform->ConOut->SetAttribute(Platform->ConOut, EFI_BACKGROUND_BLACK | EFI_RED);
     Platform->ConOut->OutputString(Platform->ConOut, u"SPACE - SELECT");
 
     Platform->ConOut->SetAttribute(Platform->ConOut, EFI_WHITE | EFI_BACKGROUND_BLACK);
-    Platform->ConOut->SetCursorPosition(Platform->ConOut, 0, 20);
+    Platform->ConOut->SetCursorPosition(Platform->ConOut, 0, 24);
     Platform->ConOut->OutputString(Platform->ConOut, u"Author: Kacperek3");
-    DrawArchLogo(Platform, 28, 5);
-    DrawWindowsLogo(Platform, 30, 15);
+
+    RenderBrailleArt(Platform, ArchBrailleAsset, ArchBrailleLines, 553, 300, 2, archColor);
+    RenderColoredWindows(Platform, WindowsAsset, WindowsLines, 560, 500, 2);
 }
 
 static void Menu_HandleInput(GameState *self, PlatformContext *Platform, EFI_INPUT_KEY *Key,
@@ -84,8 +118,6 @@ static void Menu_HandleInput(GameState *self, PlatformContext *Platform, EFI_INP
     }
 }
 static void Menu_Update(GameState *self, PlatformContext *Platform, GameStateManager *Manager) {
-    MenuState *state = (MenuState *)self;
-    EFI_INPUT_KEY key;
 
     (void)self;
     (void)Platform;
@@ -119,14 +151,18 @@ void MenuState_Init(MenuState *State, EFI_SYSTEM_TABLE *SystemTable) {
     State->base.Update = Menu_Update;
     State->base.Draw = Menu_Draw;
 
-    OptionsManager_Init(&State->optMgr, 3, SystemTable);
-    FillOption(&State->optMgr, 0, L"GAME", 6, 7, Action_StartGame);
-    FillOption(&State->optMgr, 1, L"LEVEL ", 6, 9, Action_ChoseLevel);
-    FillOption(&State->optMgr, 2, L"EXIT", 6, 11, Action_Exit);
+    OptionsManager_Init(&State->optMgr, 4, SystemTable);
+    FillOption(&State->optMgr, 0, L"GAME", 5, 7, Action_StartGame);
+    FillOption(&State->optMgr, 1, L"LEVEL ", 5, 9, Action_ChoseLevel);
+
+    FillOption(&State->optMgr, 2, L"DIAGNOSTICS", 5, 11, Action_Diagnostics);
+
+    FillOption(&State->optMgr, 3, L"EXIT", 5, 13, Action_Exit);
+
     State->currentOption = &State->optMgr;
 
     OptionsManager_Init(&State->levMgr, 3, SystemTable);
-    FillOption(&State->levMgr, 0, L"EASY", 6, 7, Action_Easy);
-    FillOption(&State->levMgr, 1, L"MEDIUM", 6, 9, Action_Medium);
-    FillOption(&State->levMgr, 2, L"HARD", 6, 11, Action_Hard);
+    FillOption(&State->levMgr, 0, L"EASY", 5, 7, Action_Easy);
+    FillOption(&State->levMgr, 1, L"MEDIUM", 5, 9, Action_Medium);
+    FillOption(&State->levMgr, 2, L"HARD", 5, 11, Action_Hard);
 }

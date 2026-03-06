@@ -1,39 +1,55 @@
-#ifndef _WINDOWS_LOGO_H
-#define _WINDOWS_LOGO_H
+#ifndef WINDOWS_LOGO_H
+#define WINDOWS_LOGO_H
 
-#include "efi.h"
+#include "art.h" // Upewnij się, że masz to zainkludowane, żeby widzieć WindowsAsset i WindowsLines
 #include "platform.h"
+#include <efi.h>
 
-#define BG_RED (EFI_RED << 4)
-#define BG_GREEN (EFI_GREEN << 4)
-#define BG_BLUE (EFI_BLUE << 4)
-#define BG_YELLOW ((EFI_RED | EFI_GREEN) << 4)
+static void DrawWindowsLogo(PlatformContext *Platform, UINTN startCol, UINTN startRow) {
+    // Mapa cięcia lewej i prawej strony
+    UINTN leftTileEnd[11] = {15, 12, 13, 13, 13, 12, 11, 11, 11, 10, 10};
 
-static void DrawTile(PlatformContext *Platform, UINTN x, UINTN y, UINTN colorAttr) {
-    Platform->ConOut->SetAttribute(Platform->ConOut, colorAttr); // Ustawiamy tło
+    for (UINTN line = 0; line < WindowsLines; line++) {
+        // Ustawiamy kursor na początek linii
+        Platform->ConOut->SetCursorPosition(Platform->ConOut, startCol, startRow + line);
 
-    for (int i = 0; i < 2; i++) {
-        Platform->ConOut->SetCursorPosition(Platform->ConOut, x, y + i);
-        Platform->ConOut->OutputString(Platform->ConOut, L"      ");
+        // Pobieramy całą linię (np. 18 znaków)
+        const CHAR16 *rowStr = WindowsAsset[line];
+
+        // Zmienne na bufory dla lewej i prawej strony
+        CHAR16 leftPart[40] = {0};
+        CHAR16 rightPart[40] = {0};
+
+        // Wyliczamy, na którym indeksie tniemy stringa
+        UINTN cutIndex = leftTileEnd[line] + 1; // +1 bo leftTileEnd to ostatni indeks lewej strony
+
+        // 1. Kopiujemy lewą część
+        UINTN i;
+        for (i = 0; i < cutIndex && rowStr[i] != L'\0'; i++) {
+            leftPart[i] = rowStr[i];
+        }
+        leftPart[i] = L'\0'; // Zamykamy stringa
+
+        // 2. Kopiujemy prawą część
+        UINTN j = 0;
+        for (; rowStr[i] != L'\0'; i++, j++) {
+            rightPart[j] = rowStr[i];
+        }
+        rightPart[j] = L'\0'; // Zamykamy stringa
+
+        // --- KOLORY LEWEJ STRONY ---
+        UINTN leftColor = (line <= 4) ? EFI_RED : EFI_BLUE;
+        Platform->ConOut->SetAttribute(Platform->ConOut, leftColor | EFI_BACKGROUND_BLACK);
+        Platform->ConOut->OutputString(Platform->ConOut, leftPart);
+
+        // --- KOLORY PRAWEJ STRONY ---
+        UINTN rightColor = (line <= 5) ? EFI_GREEN : EFI_YELLOW;
+        Platform->ConOut->SetAttribute(Platform->ConOut, rightColor | EFI_BACKGROUND_BLACK);
+        Platform->ConOut->OutputString(Platform->ConOut, rightPart);
     }
-}
 
-static void DrawWindowsLogo(PlatformContext *Platform, UINTN x, UINTN y) {
-
-    UINTN w = 6;
-    UINTN h = 2;
-
-    DrawTile(Platform, x, y, BG_RED);
-
-    DrawTile(Platform, x + w, y, BG_GREEN);
-
-    DrawTile(Platform, x, y + h, BG_BLUE);
-
-    DrawTile(Platform, x + w, y + h, BG_YELLOW);
-
+    // Zawsze posprzątaj po sobie na końcu!
     Platform->ConOut->SetAttribute(Platform->ConOut, EFI_WHITE | EFI_BACKGROUND_BLACK);
-    Platform->ConOut->SetCursorPosition(Platform->ConOut, x + 3, y + (h * 2) + 1);
-    Platform->ConOut->OutputString(Platform->ConOut, L"WINDOWS");
 }
 
-#endif //_WINDOWS_LOGO_H
+#endif

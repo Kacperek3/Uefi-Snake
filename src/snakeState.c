@@ -16,6 +16,27 @@ static void Snake_PlaceFood(snakeState *state) {
     state->food.y = pseudo_rand() % state->boardSizeY;
 }
 
+static void DrawApple(PlatformContext *Platform, UINTN x, UINTN y, UINTN size) {
+    // Skalujemy nasze "piksele" wewnątrz segmentu
+    UINTN p = size / 5;
+
+    // Kolory
+    UINT32 Red = 0x00FF0000;
+    UINT32 DarkRed = 0x00880000;
+    UINT32 Green = 0x0000FF00;
+
+    // Listek/Ogonek
+    DrawRectangle(Platform, x + 2 * p, y, p, p, Green);
+
+    // Korpus jabłka (uproszczony kształt 3x3 z zaokrąglonymi rogami)
+    DrawRectangle(Platform, x + p, y + p, 3 * p, p, Red);
+    DrawRectangle(Platform, x, y + 2 * p, 5 * p, 2 * p, Red);
+    DrawRectangle(Platform, x + p, y + 4 * p, 3 * p, p, Red);
+
+    // Mały detal - błysk na jabłku (cień/światło)
+    DrawRectangle(Platform, x + p, y + 2 * p, p, p, 0x00FFCCCC);
+}
+
 static void snakeState_Enter(GameState *self, PlatformContext *Platform) {
     snakeState *state = (snakeState *)self;
 
@@ -177,10 +198,10 @@ static void snakeState_Draw(GameState *self, PlatformContext *Platform) {
               frameHeight + 4, 2, frameColor);
     // ------------
 
-    // Draw food and
-    DrawRectangle(Platform, state->boardOffsetX + (state->food.x * SNAKE_SEGMENT_SIZE),
-                  state->boardOffsetY + (state->food.y * SNAKE_SEGMENT_SIZE), SNAKE_SEGMENT_SIZE,
-                  SNAKE_SEGMENT_SIZE, 0x000000FF);
+    // Draw food
+
+    DrawApple(Platform, state->boardOffsetX + (state->food.x * SNAKE_SEGMENT_SIZE),
+              state->boardOffsetY + (state->food.y * SNAKE_SEGMENT_SIZE), SNAKE_SEGMENT_SIZE);
 
     // Draw snake
     for (int i = 0; i < state->snakeLength; i++) {
