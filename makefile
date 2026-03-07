@@ -75,6 +75,10 @@ $(IMAGE_FILE): $(TARGET)
 	mmd -i $(IMAGE_FILE) $(EFI_PATH)
 	mcopy -i $(IMAGE_FILE) $(TARGET) $(EFI_PATH)
 	mcopy -i $(IMAGE_FILE) ext2_x64.efi $(EFI_PATH)
+	mmd -i efi.img ::/EFI/Microsoft
+	mmd -i efi.img ::/EFI/Microsoft/Boot
+	touch dummy.efi
+	mcopy -i efi.img dummy.efi ::/EFI/Microsoft/Boot/bootmgfw.efi
 	@echo "Disk Image is ready"
 	@echo "------------------------------"
 	@echo "Creating Arch linux partition"
