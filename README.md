@@ -19,8 +19,6 @@ The main premise of the bootloader is simple but unforgiving:
 
 ### Gameplay Levels
 
-To ensure a cohesive and professional presentation, the four primary graphical states of the bootloader are presented below in a precise grid layout.
-
 | | |
 | :---: | :---: |
 | <img src="assets/screens/LevelView.png" width="480"><br><b>Level Selection Menu</b><br>*Navigate using W/S and confirm with SPACE.* | <img src="assets/screens/EasyMode.png" width="480"><br><b>Level 1: Easy Mode</b><br>*Spacious 40x40 Grid, slow snake speed.* |
