@@ -21,8 +21,8 @@ The main premise of the bootloader is simple but unforgiving:
 
 | | |
 | :---: | :---: |
-| <img src="assets/screens/LevelView.png" width="480"><br><b>Level Selection Menu</b><br>*Navigate using W/S and confirm with SPACE.* | <img src="assets/screens/EasyMode.png" width="480"><br><b>Level 1: Easy Mode</b><br>*Spacious 40x40 Grid, slow snake speed.* |
-| <img src="assets/screens/MediumMode.png" width="480"><br><b>Level 2: Medium Mode</b><br>*Balanced 30x30 Grid, moderate speed.* | <img src="assets/screens/HardMode2.png" width="480"><br><b>Level 3: Hard Mode</b><br>*Claustrophobic 20x20 Grid, extreme speed.* |
+| <img src="assets/screens/LevelView.png" width="480"><br><b>Level Selection Menu</b><br>*Navigate using W/S and confirm with SPACE.* | <img src="assets/screens/EasyMode.png" width="480"><br><b>Level 1: Easy Mode</b><br> 40x40 Grid |
+| <img src="assets/screens/MediumMode.png" width="480"><br><b>Level 2: Medium Mode</b><br>*30x30 Grid* | <img src="assets/screens/HardMode2.png" width="480"><br><b>Level 3: Hard Mode</b><br> 20x20 Grid |
 
 ## Architecture and Technical Highlights
 
