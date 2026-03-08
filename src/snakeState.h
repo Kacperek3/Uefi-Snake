@@ -3,11 +3,14 @@
 
 #include "gameState.h"
 
+#define EASY 0
+#define MEDIUM 1
+#define HARD 2
 
 #define SNAKE_SEGMENT_SIZE 16
 #define SNAKE_MAX_LENGTH 100
 
-#define SNAKE_GRID_WIDTH  40 
+#define SNAKE_GRID_WIDTH 40
 #define SNAKE_GRID_HEIGHT 40
 
 typedef struct Point {
@@ -15,9 +18,7 @@ typedef struct Point {
     int y;
 } Point;
 
-
-typedef struct snakeState
-{
+typedef struct snakeState {
     GameState base;
 
     Point body[SNAKE_MAX_LENGTH];
@@ -30,11 +31,12 @@ typedef struct snakeState
 
     int boardOffsetX;
     int boardOffsetY;
+
+    int boardSizeX;
+    int boardSizeY;
 } snakeState;
 
-
-//constructor
+// constructor
 void SnakeState_Init(snakeState *State);
-
 
 #endif // SNAKE_STATE_H
